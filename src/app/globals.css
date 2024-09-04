@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --text: #09091a;
+    --background: #e5e5f6;
+    --primary: #262163;
+    --secondary: #b08dd8;
+    --accent: #8e3ebb;
+    --boxColor:#232233;
+  }
+  .dark {
+    --text: #e3e3f5;
+    --background: #090919;
+    --primary: #a09cde;
+    --secondary: #4b2773;
+    --accent: #9244c0;
+    --boxColor:#232233;
+  }
+}
+
+*{
+  box-sizing: border-box;
+}
+.custom-radio {
+  display: none;
+}
+
+.custom-radio:checked + label {
+  background-color: #B08DD8; /* Example checked background */
+}
