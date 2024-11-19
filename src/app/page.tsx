@@ -10,8 +10,7 @@ import {
   SPOTIFY_REDIRECT_URI,
   TOKEN_COOKIE_NAME,
 } from "../common/env-config";
-import { WebPlaybackSDK } from "react-spotify-web-playback-sdk";
-import Player from "@/components/MusicSection/Player";
+
 import Homepage from "@/components/Homepage";
 
 async function fetchToken(code: string) {
@@ -24,25 +23,18 @@ export default async function CallbackPage() {
   const stateFromCookies = cookie.get("state")?.value as string;
 
   const code = cookie.get("code")?.value;
-  
 
   if (stateFromCookies && code) {
     try {
       const response = await fetchToken(code);
 
       if (response) {
-        return (
-          <div>
-            {/* Render the token or any other component */}
-            {/* <Player token={JSON.parse(response).access_token} />
-            Token: {JSON.parse(response).access_token} */}
-            <Homepage />
-
-          </div>
-        );
+        const token = JSON.parse(response).access_token;
+        return <Homepage token={token} />;
       }
     } catch (error) {
-      console.error(error);
+      console.error("ERROR ENCOUNTERED", error);
     }
   }
+  return <Homepage noAuth />;
 }

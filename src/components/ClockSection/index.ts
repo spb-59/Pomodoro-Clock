@@ -3,7 +3,4 @@ import PomodoroClock from "./PomodoroClock";
 import Clock from "./Clock";
 import Todo from "./Todo";
 
-
-export{
-    MainClock, PomodoroClock,Clock,Todo
-}
+export { MainClock, PomodoroClock, Clock, Todo };

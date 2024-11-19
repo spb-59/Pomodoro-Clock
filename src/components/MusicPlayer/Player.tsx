@@ -1,19 +1,28 @@
-'use client'
-import { VFC, useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+import { useState, useEffect, ReactNode } from "react";
+import { playerContext } from "./playerContext";
 
-type Props = {
+const Player = ({
+  token,
+  children,
+}: {
   token: string;
-};
-
-  const Player = ({ token }) => {
+  children: ReactNode;
+}) => {
   const [is_paused, setPaused] = useState<boolean>(false);
   const [is_active, setActive] = useState<boolean>(false);
   const [player, setPlayer] = useState<Spotify.Player | null>(null);
+  const [state, setState] = useState<Spotify.PlaybackState | null>(null);
   const [current_track, setTrack] = useState<Spotify.Track | null>(null);
+  const [deviceID, setID] = useState<string | null>(null);
+  const [shuffle, setShuffle] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    //adding the spotify API script
     const script = document.createElement("script");
-    script.src = "http://sdk.scdn.co/spotify-player.js";
+    script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
 
     document.body.appendChild(script);
@@ -26,12 +35,12 @@ type Props = {
         },
         volume: 0.5,
       });
-
       setPlayer(player);
-
       player.addListener("ready", ({ device_id }) => {
-        console.log("Ready with Device ID", device_id);
-        fetch(`https://api.spotify.com/v1/me/player`, {
+        setID(device_id);
+        console.log("DEVICE ID");
+        if (token) {
+          fetch(`https://api.spotify.com/v1/me/player`, {
             method: "PUT",
             body: JSON.stringify({ device_ids: [device_id], play: false }),
             headers: {
@@ -39,130 +48,65 @@ type Props = {
               Authorization: `Bearer ${token}`,
             },
           });
+        }
+        console.log("DEVICE READY");
+        setError(false);
       });
 
       player.addListener("not_ready", ({ device_id }) => {
-        console.log("Device ID has gone offline", device_id);
+        setID(null);
       });
 
-      player.addListener('player_state_changed', ((state) => {
+      player.addListener("player_state_changed", (state) => {
         player.getCurrentState().then((state) => {
-            (!state)? setActive(false) : setActive(true)
-            });
-        if(!state){
-            return;
-        }    
-        console.log('state changed');
-        console.log('track:');
+          !state ? setActive(false) : setActive(true);
+        });
+        if (!state) {
+          setState(null);
+          return;
+        }
+        console.log("state changed");
+        setState(state);
+        console.log("track:");
         console.log(state.track_window.current_track);
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
-        
-     
-        }));
+        setShuffle(state.shuffle);
+      });
 
-      player.connect().then(success => {
-        if (success) {
-          console.log('The Web Playback SDK successfully connected to Spotify!');
+      player.connect().then((success) => {
+        if (!success) {
+          setError(true);
         }
       });
     };
-
-
-  },[token]);
-
-
-
+  }, [token]);
 
   if (!player) {
     return (
-      <>
-        <div className="container">
-          <div className="main-wrapper">
-            <b>Spotify Player is null</b>
-          </div>
-        </div>
-      </>
-    );
-  } else if (!is_active) {
-
-    return (
-      <>
-        <div className="container">
-          <div className="main-wrapper">
-            <b>
-              Instance not active. Transfer your playback using your Spotify app
-            </b>
-
-
-            <button className="flex w-10 h-10 bg-primary" onClick={()=>{player.togglePlay().then(() => {
-  console.log('Toggled playback!');
-});}} />
-            <button
-                className="flex w-10 h-10 bg-primary"
-                onClick={() => {
-                  player.nextTrack();
-                }}
-              >kkkkk</button>
-
-          </div>
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div className="container">
-          <div className="main-wrapper">
-            <div className=""></div>
-            {current_track && current_track.album.images[0].url ? (
-              <img
-                src={current_track.album.images[0].url}
-                className="now-playing__cover"
-                alt=""
-              />
-            ) : null}
-<button className="flex w-10 h-10 bg-primary" onClick={()=>{player.togglePlay().then(() => {
-  console.log('Toggled playback!');
-});}} />
-            <div className="now-playing__side">
-              <div className="now-playing__name">{current_track?.name}</div>
-              <div className="now-playing__artist">
-                {current_track?.artists[0].name}
-              </div>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.previousTrack();
-                }}
-              >
-                &lt;&lt;
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.togglePlay();
-                }}
-              >
-                {is_paused ? "PLAY" : "PAUSE"}
-              </button>
-
-              <button
-                className="btn-spotify"
-                onClick={() => {
-                  player.nextTrack();
-                }}
-              >
-                &gt;&gt;
-              </button>
-            </div>
-          </div>
-        </div>
-      </>
+      <playerContext.Provider value={undefined}>
+        {children}
+      </playerContext.Provider>
     );
   }
+
+  return (
+    <playerContext.Provider
+      value={{
+        player: player,
+        paused: is_paused,
+        active: is_active,
+        track: current_track,
+        state: state,
+        deviceID: deviceID,
+        token: token,
+        error: error,
+        shuffle: shuffle,
+      }}
+    >
+      {children}
+    </playerContext.Provider>
+  );
 };
 
 export default Player;

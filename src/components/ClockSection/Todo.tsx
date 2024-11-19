@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-
-const TODO_LIST_STORAGE='todo-list-storage'
+const TODO_LIST_STORAGE = "todo-list-storage";
 export default function Todo() {
   const [tasks, setTasks] = useState<string[]>([]);
   const [newTask, setNewTask] = useState("");
@@ -40,19 +39,17 @@ export default function Todo() {
   }, []);
 
   useEffect(() => {
-    const toStore = JSON.stringify(tasks)
+    const toStore = JSON.stringify(tasks);
 
-    localStorage.setItem(TODO_LIST_STORAGE,toStore)
-   
+    localStorage.setItem(TODO_LIST_STORAGE, toStore);
   }, [tasks]);
 
-
   return (
-    <div className="w-full flex items-center justify-center h-1/3">
-      <div className="w-[95%] bg-box h-[90%] rounded-xl p-4">
+    <div className="w-full flex items-center justify-center h-full">
+      <div className="w-[99%] bg-box h-[90%] rounded-xl p-4">
         <span className="font-bold text-2xl text-white">To-do</span>
         <div className="flex flex-col p-4 h-full">
-          <div className="h-3/4 overflow-scroll flex flex-col">
+          <div className="h-3/4 overflow-scroll flex flex-col hide-scrollbar">
             {tasks.map((item, index) => (
               <TodoItem
                 key={index}

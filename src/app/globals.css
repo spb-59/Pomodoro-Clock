@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --text: #09091a;
@@ -10,19 +9,20 @@
     --primary: #262163;
     --secondary: #b08dd8;
     --accent: #8e3ebb;
-    --boxColor:#232233;
+    --boxColor: #232233;
   }
+  .dark *,
   .dark {
     --text: #e3e3f5;
     --background: #090919;
     --primary: #a09cde;
     --secondary: #4b2773;
     --accent: #9244c0;
-    --boxColor:#232233;
+    --boxColor: #232233;
   }
 }
 
-*{
+* {
   box-sizing: border-box;
 }
 .custom-radio {
@@ -30,5 +30,32 @@
 }
 
 .custom-radio:checked + label {
-  background-color: #B08DD8; /* Example checked background */
+  background-color: #b08dd8; /* Example checked background */
+}
+
+.lucide {
+  color: white;
+  mix-blend-mode: difference;
+}
+.cover-overlay {
+  transition:
+    opacity 0.2s,
+    mix-blend-mode 0.2s;
+  opacity: 0;
+}
+
+.cover:hover > .cover-overlay {
+  opacity: 0.6;
+}
+.cover:hover > .cover-child {
+  display: block;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }
