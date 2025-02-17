@@ -25,6 +25,11 @@
 * {
   box-sizing: border-box;
 }
+body{
+  overflow: hidden;
+  width: 100dvw;
+  height: 100dvh;
+}
 .custom-radio {
   display: none;
 }

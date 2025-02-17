@@ -19,6 +19,7 @@
     "next": "^14.2.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-rnd": "^10.4.14",
     "react-spotify-web-playback-sdk": "^3.0.2",
     "react-timer-hook": "^3.0.7",
     "tailwind-merge": "^2.5.2",

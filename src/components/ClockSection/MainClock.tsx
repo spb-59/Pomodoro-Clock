@@ -1,20 +1,25 @@
 "use client";
+
+import { Rnd } from "react-rnd";
+import React, { useState, useEffect } from "react";
+
 export default function MainClock() {
   return (
-    <div className="flex w-full h-1/3 items-center justify-center ">
-      <div className="w-[90%] h-3/4 bg-primary rounded-[110%] flex items-center justify-center rotate-[5.84deg]">
+    <Rnd minWidth={'30vw'} minHeight={'20vh'} > 
+    <div className="flex w-full h-full lg:min-h-[20vh] sm:w-[40vw] items-center justify-center ">
+      <div className="w-[90%] h-3/4 bg-primary rounded-[110%] min-h-[10vh] lg:min-h-[20vh] flex items-center justify-center ">
         <span
-          className="text-text  font-bold  text-6xl mr-8"
+          className="text-text  font-bold  text-[4vw] "
           suppressHydrationWarning
         >
           <Time />
         </span>
       </div>
     </div>
+    </Rnd>
   );
 }
 
-import React, { useState, useEffect } from "react";
 
 const Time = () => {
   var [time, setTime] = useState(new Date());

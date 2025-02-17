@@ -2,6 +2,7 @@
 'use client'
 
 import { JSX, SVGProps, useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
 import { useTimer } from "react-timer-hook";
 
 
@@ -16,12 +17,15 @@ export default function PomodoroClock() {
   const time = getEndTime(20)
 
   return (
-    <div className="flex w-full h-2/3 items-center justify-center ">
-      <div className="w-[95%] h-3/4 border-primary border-2 rounded-xl flex items-center justify-end  p-2">
+    <Rnd minWidth={'45vw'} minHeight={'35vh'} >
+
+   
+      <div className="w-[95%] sm:w-[45vw] h-3/4 border-primary border-2 rounded-xl flex items-center justify-end lg:min-h-[35vh] p-2">
    
         <Timer duration={time} />
       </div>
-    </div>
+  
+    </Rnd>
   );
 }
 
@@ -70,7 +74,7 @@ function Timer({duration}:{duration:any}){
   const toggleTime = () => {
     setIndex((prevIndex) => {
       const newIndex = prevIndex === times.length - 1 ? 0 : prevIndex + 1;
-      setTime(times[newIndex]); // Use the updated index here to set time
+      setTime(times[newIndex]); 
       return newIndex;
     });
   };
@@ -119,12 +123,12 @@ switchToBreak()
 
   return(
     <div className="flex flex-col w-[90%] gap-4">
-    <div className="text-text  font-bold w-3/4 text-right text-9xl mr-8 self-end">{minutes}:{seconds.toLocaleString('en-US', {
+    <div className="text-text  font-bold w-3/4 text-right text-[8vw] mr-8 self-end">{minutes}:{seconds.toLocaleString('en-US', {
     minimumIntegerDigits: 2,
     useGrouping: false
   })}</div>
     <div className="flex gap-5">
-        <button className="rounded-[1.5em] px-6 py-2 bg-accent w-3/4" onClick={()=>{toggleTime();setStart(false)}}><CurrentTime time={times[index]} /></button>
+        <button className="rounded-[1.5em] lg:px-6 lg:py-2 px-3 py-1 bg-accent text-[2vw] w-3/4" onClick={()=>{toggleTime();setStart(false)}}><CurrentTime time={times[index]} /></button>
         {!isRunning && <PlayButton onClick={start}/>}
         {isRunning &&<PauseButton onClick={pause} />}
    </div>
